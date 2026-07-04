@@ -1,5 +1,7 @@
 # Literature Suite — AI-assisted literature workflow (Claude Code skills)
 
+**English | [简体中文](README.zh-CN.md)**
+
 A five-stage pipeline that takes you from "find papers on X" to a filed, searchable
 personal knowledge base — all as Claude Code skills you drive in plain language or via
 slash commands.

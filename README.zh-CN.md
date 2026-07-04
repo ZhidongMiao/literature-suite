@@ -1,5 +1,7 @@
 # Literature Suite —— AI 辅助文献工作流(Claude Code Skills)
 
+**[English](README.md) | 简体中文**
+
 一套五阶段流水线,带你从"找几篇关于 X 的论文"一路走到归档好、可检索的个人知识库——
 全部以 Claude Code skill 的形式提供,用自然语言或斜杠命令驱动。
 
