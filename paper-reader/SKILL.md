@@ -18,7 +18,7 @@ description: |
 license: MIT
 metadata:
   author: matteo
-  version: "3.0.0"
+  version: "3.1.0"
   derived_from: gpgpu-paper-reader@2.2.0
 ---
 
@@ -109,14 +109,22 @@ Pick the fetch path by input type, **get full text before analyzing**:
 |---|---|
 | Local PDF path | `Read` tool; if binary/garbled → `bash: pdftotext <path> -` |
 | arXiv / bioRxiv URL | `web_fetch` abs page for metadata; fetch `/pdf/` version |
-| ACM DL / IEEE Xplore / OpenReview / journal | `web_fetch`; paywall → ask user for PDF |
-| DOI | `web_fetch https://doi.org/<DOI>`; if paywalled, try OpenAlex/Semantic Scholar via `lit-discovery` MCP for abstract + open PDF |
+| ACM DL / IEEE Xplore / OpenReview / journal | `web_fetch`; paywall → try OA fallback below, else ask user for PDF |
+| DOI | `web_fetch https://doi.org/<DOI>`; if paywalled, try OpenAlex/Semantic Scholar via `lit-discovery` MCP for abstract + open PDF, else OA fallback below |
 | Patent number (US/EP/CN/WO/JP/KR) | `web_fetch https://patents.google.com/patent/<NUMBER>` |
 | Bare title / ambiguous | `web_search`, or `lit-discovery` MCP, to locate → confirm → fetch |
 
 > If the `lit-discovery` skill / academic MCP servers are available, prefer them over raw
 > `web_search` for resolving titles and pulling open-access PDFs — they return clean
 > metadata (DOI, venue, year, open PDF URL) that feeds the citation block directly.
+
+**Closed-access fallback:** if a paper resolves to a real DOI but every path above hits a
+paywall with no open-access copy, check whether the private `scidownload-fetch` skill is
+installed (`tool_search` / available-skills list) before giving up. It's a personal,
+account-specific document-delivery skill — not part of this suite and not present for
+every user — so only reach for it when it shows up as available, and confirm with the
+user first ("这篇是付费墙，openaccess 没找到，要不要试试 scidownload"). Don't silently
+skip straight to it just because a paper is paywalled.
 
 ---
 
@@ -303,6 +311,7 @@ After writing the file, print ONLY:
 | arXiv figures | `web_fetch` HTML, extract `<img>` URLs |
 | Patent number | `web_fetch` Google Patents |
 | Resolve title / find open PDF | `lit-discovery` skill (MCP) or `web_search` |
+| Paywalled, no OA copy anywhere, DOI known | `scidownload-fetch` skill — only if installed (private, per-user), confirm with user first |
 | Verify citations before finalizing | `cite-verify` skill |
 | File notes into knowledge base | `kb-ingest` skill (Zotero/Obsidian/PaperQA2) |
 | Multi-paper thematic synthesis | `literature-synthesis` skill or `/paper:survey` |
